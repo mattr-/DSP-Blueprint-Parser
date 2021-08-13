@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 
 module DspBlueprintParser
   # Data Sections
@@ -11,6 +10,19 @@ module DspBlueprintParser
       @str_blueprint = str_blueprint.strip
       @first_quote_loc = @str_blueprint.index('"')
       @second_quote_loc = @str_blueprint[(@first_quote_loc + 1)..].index('"') + @first_quote_loc + 1
+
+      input = StringIO.new('')
+      gz = Zlib::GzipWriter.new(input)
+
+      gz.write [113, 23, 0, 0].pack('C*')
+
+      gz.close
+
+      compressed = StringIO.new input.string
+      data = Zlib::GzipReader.new(compressed)
+                             .each_byte
+                             .to_a
+      binding.pry
     end
 
     # @return [Array<String>]
@@ -23,7 +35,7 @@ module DspBlueprintParser
     end
 
     def hash
-      @str_blueprint[@second_quote_loc + 1..-1]
+      @str_blueprint[@second_quote_loc + 1..]
     end
 
     # @return [Array<Integer>] array of bytes, 0..255

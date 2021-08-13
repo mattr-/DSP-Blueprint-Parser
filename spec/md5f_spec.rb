@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe DspBlueprintParser do
   it 'hash valid' do
     blueprint = File.read('spec/fixtures/blueprint.txt')

@@ -4,7 +4,7 @@ require 'date'
 require 'zlib'
 require 'stringio'
 require 'base64'
-require 'md5f'
+# require 'md5f'
 
 require_relative 'dsp_blueprint_parser/version'
 require_relative 'dsp_blueprint_parser/blueprint_data'
@@ -31,13 +31,13 @@ module DspBlueprintParser
 
   # @param input [String]
   # @return [Boolean]
-  def self.is_valid?(input)
+  def self.valid?(input)
     return false if input.size < 28
     return false unless input.start_with? 'BLUEPRINT:'
 
     sections = DataSections.new(input)
-    hash = MD5F::compute(sections.hashed_string)
+    hash = MD5F.compute(sections.hashed_string)
 
-    return sections.hash == hash
+    sections.hash == hash
   end
 end
